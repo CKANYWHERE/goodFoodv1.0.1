@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RealTime</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+  <title>RealTime</title>
+
+  <!-- 부트스트랩 -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <script>
+  function btnOrderClick(){
+  var inputdata = $('input[name=farmorder]').val();
+  var isOrderChecked = false;
+  var url = "http://35.200.0.166:3000/api/Seller/" + inputdata
+  $.ajax({
+      type:"POST",
+      url:url,
+      data : {name : inputdata},
+      dataType : "json",
+      success: function(json){
+        if(json['result'] == "true"){
+          fr.isOrderChecked.name = "true";
+          alert('인증되었습니다.');
+        }else {
+          alert('사용자가 없습니다.');
+        }
+      },
+      error: function(xhr, status, error) {
+        alert('오류 발생');
+      }
+  });
+};
+
+
+function btnFarmClick(){
+var inputdata = $('input[name=farmorigin]').val();
+var isFarmChecked = false;
+var url = "http://35.200.0.166:3000/api/Farm/" + inputdata
+$.ajax({
+    type:"POST",
+    url:url,
+    data : {name : inputdata},
+    dataType : "json",
+    success: function(json){
+      if(json['result'] == "true"){
+        fr.isFarmChecked.name = "true";
+        alert('인증되었습니다.');
+      }else {
+        alert('농장이 없습니다.');
+      }
+    },
+    error: function(xhr, status, error) {
+      alert('오류 발생');
+    }
+});
+};
+
+$(".submit").click(function(){
+  if(isChecked == false){
+      alert("사용자 확인부터 해주세요");
+      return;
+  }else{
+    $(".form").submit();
+  }
+});
+
+function check() {
+  if(fr.farmorder.value == "") {
+    alert("상품주ID를 입력해주세요.");
+    fr.farmorder.focus();
+    return false;
+  }
+
+  else if(fr.imgFile.value == "") {
+    alert("이미지를 추가해주세요");
+    fr.imgFile.focus();
+    return false;
+  }
+
+  else if(fr.farmorigin.value == "") {
+    alert("농장 이름을 입력해 주세요");
+    fr.farmorigin.focus();
+    return false;
+  }
+
+
+  else if(fr.isOrderChecked.name == "false") {
+    alert("상품주 ID를 확인해주세요");
+    return false;
+  }
+
+  else if(fr.isFarmChecked.name == "false") {
+    alert("농장을 확인해주세요");
+    return false;
+  }
+  else return true;
+}
+  </script>
+</head>
+
+<body>
+  <div class="contentwrap">
+  <article class="container">
+  <div class="jumbotron">
+  <h1>Real Food Admin</h1>
+  <p>농장 사진 넣기</p>
+  <p>농장 주인 인증을 꼭해주세요</p>
+</div>
+
+
+<div class="page-header">
+<h1>농장추가 이미지<small>상품 주인 인증을 꼭해주세요</small></h1>
+</div>
+<form name="fr" onsubmit="return check()" class="form-horizontal" action="/createfarmimage/success" method="post" enctype="multipart/form-data">
+<div class="form-group">
+<label class="col-sm-2 control-label">농장주인 ID</label>
+
+<div class="col-sm-6" id = "farmorder">
+<input type="text" class="form-control" id="farmorder" name="farmorder"placeholder="농장주">
+<button type="button"class="btn btn-danger" id='autorization' onClick='btnOrderClick()'>농장주인 인증</button>
+</div>
+</div>
+
+<div class="form-group">
+<label class="col-sm-2 control-label">농장이름</label>
+
+<div class="col-sm-6" id = "farmorder">
+<input type="text" class="form-control" id="farmorigin" name="farmorigin"placeholder="농장이름">
+<button type="button"class="btn btn-danger" id='autorization' onClick='btnFarmClick()'>농장 인증</button>
+</div>
+</div>
+
+<input type = "hidden" id="isOrderChecked"  name="false">
+<input type = "hidden" id="isFarmChecked"  name="false">
+
+<div class="form-group">
+<label for="inputName" class="col-sm-2 control-label">이미지추가</label>
+<div class="col-sm-6">
+<input type="file" class="form-control" id="imgFile" name = "imgFile">
+</div>
+</div>
+
+<div class="form-group">
+<label for="inputName" class="col-sm-2 control-label"></label>
+<div class="col-sm-6">
+  <button class="btn btn-primary" id="submit" type="submit">양식제출</button>
+</div>
+</div>
+</form>
+</article>
+</div>
+  </form>
+    </div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
+  <script src="js/bootstrap.min.js"></script>
+</body>
+</html>
